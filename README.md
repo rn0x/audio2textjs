@@ -1,7 +1,7 @@
 # Audio2TextJS
 
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/rn0x/Audio2TextJS/blob/main/LICENSE)
-[![npm version](https://badge.fury.io/js/Audio2TextJS.svg)](https://badge.fury.io/js/Audio2TextJS)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/rn0x/audio2textjs/blob/main/LICENSE)
+[![npm version](https://badge.fury.io/js/audio2textjs.svg)](https://badge.fury.io/js/audio2textjs)
 
 Audio2TextJS is a Node.js library for audio processing and transcription using the Whisper tool. It supports converting audio files to text using various pre-trained models.
 
@@ -23,7 +23,7 @@ npm install audio2textjs
 ## Usage
 
 ```javascript
-import Audio2TextJS from 'Audio2TextJS';
+import Audio2TextJS from 'audio2textjs';
 
 // Example usage
 const converter = new Audio2TextJS({
