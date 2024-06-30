@@ -1,0 +1,120 @@
+{
+  "linux": [
+    {
+      "id": "ffmpeg",
+      "filename": "ffmpeg",
+      "description": "FFmpeg is a complete, cross-platform solution to record, convert and stream audio and video.",
+      "path": "linux/ffmpeg",
+      "architecture": "x64",
+      "url": "https://github.com/rn0x/Audio2TextJS/releases/download/BIN_FILES/ffmpeg",
+      "dependencies": []
+    },
+    {
+      "id": "ffmpeg",
+      "filename": "ffmpeg-aarch64",
+      "description": "FFmpeg for ARM64 architecture.",
+      "path": "linux/ffmpeg-aarch64",
+      "architecture": "arm64",
+      "url": "https://github.com/rn0x/Audio2TextJS/releases/download/BIN_FILES/ffmpeg-aarch64",
+      "dependencies": []
+    },
+    {
+      "id": "ffprobe",
+      "filename": "ffprobe",
+      "description": "FFprobe is a simple multimedia stream analyzer.",
+      "path": "linux/ffprobe",
+      "architecture": "x64",
+      "url": "https://github.com/rn0x/Audio2TextJS/releases/download/BIN_FILES/ffprobe",
+      "dependencies": []
+    },
+    {
+      "id": "ffprobe",
+      "filename": "ffprobe-aarch64",
+      "description": "FFprobe for ARM64 architecture.",
+      "path": "linux/ffprobe-aarch64",
+      "architecture": "arm64",
+      "url": "https://github.com/rn0x/Audio2TextJS/releases/download/BIN_FILES/ffprobe-aarch64",
+      "dependencies": []
+    },
+    {
+      "id": "whisper",
+      "filename": "whisper",
+      "description": "Whisper is a tool for audio processing and transcription.",
+      "path": "linux/whisper",
+      "architecture": "x64",
+      "url": "https://github.com/rn0x/Audio2TextJS/releases/download/BIN_FILES/whisper",
+      "dependencies": []
+    },
+    {
+      "id": "whisper",
+      "filename": "whisper-aarch64",
+      "description": "Whisper for ARM64 architecture.",
+      "path": "linux/whisper-aarch64",
+      "architecture": "arm64",
+      "url": "https://github.com/rn0x/Audio2TextJS/releases/download/BIN_FILES/whisper-aarch64",
+      "dependencies": []
+    }
+  ],
+  "win32": [
+    {
+      "id": "ffmpeg",
+      "filename": "ffmpeg.exe",
+      "description": "FFmpeg is a complete, cross-platform solution to record, convert and stream audio and video.",
+      "path": "win32/ffmpeg.exe",
+      "architecture": "x64",
+      "url": "https://github.com/rn0x/Audio2TextJS/releases/download/BIN_FILES/ffmpeg.exe",
+      "dependencies": []
+    },
+    {
+      "id": "ffprobe",
+      "filename": "ffprobe.exe",
+      "description": "FFprobe is a simple multimedia stream analyzer.",
+      "path": "win32/ffprobe.exe",
+      "architecture": "x64",
+      "url": "https://github.com/rn0x/Audio2TextJS/releases/download/BIN_FILES/ffprobe.exe",
+      "dependencies": []
+    },
+    {
+      "id": "whisper",
+      "filename": "whisper.exe",
+      "description": "Whisper is a tool for audio processing and transcription.",
+      "path": "win32/whisper.exe",
+      "architecture": "x64",
+      "url": "https://github.com/rn0x/Audio2TextJS/releases/download/BIN_FILES/whisper.exe",
+      "dependencies": [
+        {
+          "id":"whisper",
+          "filename": "whisper.dll",
+          "description": "Whisper dynamic link library for audio processing.",
+          "path": "win32/whisper.dll",
+          "architecture": "x64",
+          "url": "https://github.com/rn0x/Audio2TextJS/releases/download/BIN_FILES/whisper.dll"
+        },
+        {
+          "id":"whisper",
+          "filename": "SDL2.dll",
+          "description": "Simple DirectMedia Layer (SDL) library for handling multimedia, input, and windowing.",
+          "path": "win32/SDL2.dll",
+          "architecture": "x64",
+          "url": "https://github.com/rn0x/Audio2TextJS/releases/download/BIN_FILES/SDL2.dll"
+        },
+        {
+          "id":"whisper",
+          "filename": "quantize.exe",
+          "description": "Quantization tool for optimizing neural networks.",
+          "path": "win32/quantize.exe",
+          "architecture": "x64",
+          "url": "https://github.com/rn0x/Audio2TextJS/releases/download/BIN_FILES/quantize.exe"
+        },
+        {
+          "id":"whisper",
+          "filename": "bench.exe",
+          "description": "Benchmarking tool for performance testing.",
+          "path": "win32/bench.exe",
+          "architecture": "x64",
+          "url": "https://github.com/rn0x/Audio2TextJS/releases/download/BIN_FILES/bench.exe"
+        }
+      ]
+    }
+  ]
+}

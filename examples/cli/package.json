@@ -1,0 +1,19 @@
+{
+  "name": "express.js",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [],
+  "author": {
+    "name": "ryan almalki",
+    "url": "https://github.com/rn0x"
+  },
+  "license": "MIT",
+  "description": "",
+  "dependencies": {
+    "commander": "^12.1.0"
+  }
+}

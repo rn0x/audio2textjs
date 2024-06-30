@@ -1,0 +1,27 @@
+{
+  "name": "audio2textjs",
+  "version": "1.0.0",
+  "description": "A Node.js library for audio processing and transcription using the Whisper tool. It supports converting audio files to text using various pre-trained models",
+  "main": "src/Audio2TextJS.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js",
+    "postinstall": "node src/postinstall.js",
+    "test": "node examples/test.js"
+  },
+  "keywords": [
+    "audio",
+    "processing",
+    "transcription",
+    "speech-to-text",
+    "Whisper"
+  ],
+  "author": {
+    "name": "Ryan Almalki",
+    "url": "https://github.com/rn0x"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "node-fetch": "^3.3.2"
+  }
+}
