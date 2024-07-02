@@ -145,16 +145,16 @@ async function convertAudioFile(inputFilePath, desiredSampleRate = 16000) {
             if (currentSampleRate === desiredSampleRate) {
                 return { success: true, message: `Input file '${inputFilePath}' is already at the desired sample rate.`, output: inputFilePath };
             }
-            outputFilePath = `${inputFilePath}_OUTPUT.wav`;
+            outputFilePath = `${inputFilePath}.OUTPUT.wav`;
             return await convertSampleRate(inputFilePath, outputFilePath, desiredSampleRate, ffmpegPath);
         } else {
-            const tempWavPath = `${inputFilePath}_TEMP.wav`;
+            const tempWavPath = `${inputFilePath}.TEMP.wav`;
             await convertToWav(inputFilePath, tempWavPath, ffmpegPath);
             const currentSampleRate = await getSampleRate(ffprobePath, tempWavPath);
             if (currentSampleRate === desiredSampleRate) {
                 return { success: true, message: `Input file '${inputFilePath}' converted to WAV format with the desired sample rate.`, output: tempWavPath };
             }
-            outputFilePath = `${inputFilePath}_OUTPUT.wav`;
+            outputFilePath = `${inputFilePath}.OUTPUT.wav`;
             const result = await convertSampleRate(tempWavPath, outputFilePath, desiredSampleRate, ffmpegPath);
             fs.unlinkSync(tempWavPath);
             return result;

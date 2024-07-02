@@ -1,3 +1,11 @@
+/**
+ * LICENSE MIT
+ * Copyright (c) 2024 rn0x
+ * github: https://github.com/rn0x
+ * telegram: https://t.me/F93ii
+ * repository: https://github.com/rn0x/Audio2TextJS
+ */
+
 // Import necessary modules
 import express from 'express';       // 🌐 Express framework for handling HTTP requests
 import multer from 'multer';         // 📁 Multer for handling file uploads

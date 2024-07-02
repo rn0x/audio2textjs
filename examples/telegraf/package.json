@@ -1,18 +1,16 @@
 {
-  "name": "telegraf.js",
+  "name": "audio2textjs - telegraf.js",
   "version": "1.0.0",
   "main": "index.js",
   "type": "module",
   "scripts": {
     "start": "node index.js"
   },
-  "keywords": [],
   "author": {
     "name": "ryan almalki",
     "url": "https://github.com/rn0x"
   },
   "license": "MIT",
-  "description": "",
   "dependencies": {
     "telegraf": "^4.16.3",
     "node-fetch": "^3.3.2"

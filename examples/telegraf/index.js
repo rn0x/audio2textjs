@@ -1,4 +1,10 @@
-// index.js
+/**
+ * LICENSE MIT
+ * Copyright (c) 2024 rn0x
+ * github: https://github.com/rn0x
+ * telegram: https://t.me/F93ii
+ * repository: https://github.com/rn0x/Audio2TextJS
+ */
 
 import { Telegraf } from 'telegraf';
 import fs from 'fs';

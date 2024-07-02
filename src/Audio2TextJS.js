@@ -124,6 +124,25 @@ class Audio2TextJS {
     }
 
     /**
+    * Determines the path to the ffprobe executable based on the operating system.
+    * @returns {string} - The path to the ffprobe executable.
+    */
+    getFFprobePath() {
+        const dirBin = path.join(this.__dirname, "bin");
+        if (this.platform === 'win32') {
+            return path.join(dirBin, "win32", "ffprobe.exe");
+        } else if (this.platform === 'linux' || this.platform === 'android') {
+            if (this.arch === 'x64') {
+                return path.join(dirBin, "linux", "ffprobe");
+            } else if (['arm64', 'arm'].includes(this.arch)) {
+                return path.join(dirBin, "linux", "ffprobe-aarch64");
+            }
+        } else {
+            throw new Error('Unsupported operating system.');
+        }
+    }
+
+    /**
      * Runs the Whisper tool with the specified input file, model file, and output file.
      * @param {string} inputFile - Path to the input WAV file.
      * @param {'tiny'|'tiny.en'|'base'|'base.en'|'small'|'small.en'|'medium'|'medium.en'|'large-v1'|'large'} model - The name of the model to download. Must be one of "tiny.en", "tiny", "base.en", "base", "small.en", "small", "medium.en", "medium", "large-v1", "large".
@@ -204,6 +223,46 @@ class Audio2TextJS {
             });
 
             subprocess.on('error', (err) => {
+                reject(err);
+            });
+        });
+    }
+
+    /**
+     * Check if a video file contains audio streams.
+     * @param {string} videoPath - Path to the video file.
+     * @returns {Promise<boolean>} - Promise that resolves to true if audio is present, false otherwise.
+     */
+    async checkAudioPresence(videoPath) {
+        return new Promise((resolve, reject) => {
+
+            const ffprobePath = this.getFFprobePath();
+            const args = [
+                '-v', 'error',
+                '-select_streams', 'a:0',
+                '-show_entries', 'stream=codec_type',
+                '-of', 'default=nokey=1:noprint_wrappers=1',
+                videoPath
+            ]
+            const ffprobe = spawn(ffprobePath, args);
+            let hasAudio = false;
+
+            ffprobe.stdout.on('data', (data) => {
+                const codecType = data.toString().trim();
+                if (codecType === 'audio') {
+                    hasAudio = true;
+                }
+            });
+
+            ffprobe.on('close', (code) => {
+                if (code === 0) {
+                    resolve(hasAudio);
+                } else {
+                    reject(new Error(`ffprobe process exited with code ${code}`));
+                }
+            });
+
+            ffprobe.on('error', (err) => {
                 reject(err);
             });
         });

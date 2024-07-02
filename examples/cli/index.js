@@ -1,5 +1,11 @@
 #!/usr/bin/env node
-
+/**
+ * LICENSE MIT
+ * Copyright (c) 2024 rn0x
+ * github: https://github.com/rn0x
+ * telegram: https://t.me/F93ii
+ * repository: https://github.com/rn0x/Audio2TextJS
+ */
 import { Command } from 'commander/esm.mjs'; // Import using ES modules
 import Audio2TextJS from '../../src/Audio2TextJS.js'; // Import Audio2TextJS class
 
