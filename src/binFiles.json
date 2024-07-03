@@ -43,7 +43,40 @@
       "path": "linux/whisper",
       "architecture": "x64",
       "url": "https://github.com/rn0x/Audio2TextJS/releases/download/BIN_FILES/whisper",
-      "dependencies": []
+      "dependencies": [
+        {
+          "id": "whisper",
+          "filename": "libggml.so",
+          "description": "ggml library for x64 architecture.",
+          "path": "linux/libggml.so",
+          "architecture": "x64",
+          "url": "https://github.com/rn0x/Audio2TextJS/releases/download/BIN_FILES/libggml.so"
+        },
+        {
+          "id": "whisper",
+          "filename": "libwhisper.so",
+          "description": "Whisper library for x64 architecture.",
+          "path": "linux/libwhisper.so",
+          "architecture": "x64",
+          "url": "https://github.com/rn0x/Audio2TextJS/releases/download/BIN_FILES/libwhisper.so"
+        },
+        {
+          "id": "whisper",
+          "filename": "libwhisper.so.1",
+          "description": "Whisper library version 1 for x64 architecture.",
+          "path": "linux/libwhisper.so.1",
+          "architecture": "x64",
+          "url": "https://github.com/rn0x/Audio2TextJS/releases/download/BIN_FILES/libwhisper.so.1"
+        },
+        {
+          "id": "whisper",
+          "filename": "libwhisper.so.1.6.2",
+          "description": "Whisper library version 1.6.2 for x64 architecture.",
+          "path": "linux/libwhisper.so.1.6.2",
+          "architecture": "x64",
+          "url": "https://github.com/rn0x/Audio2TextJS/releases/download/BIN_FILES/libwhisper.so.1.6.2"
+        }
+      ]
     },
     {
       "id": "whisper",
@@ -52,7 +85,40 @@
       "path": "linux/whisper-aarch64",
       "architecture": "arm64",
       "url": "https://github.com/rn0x/Audio2TextJS/releases/download/BIN_FILES/whisper-aarch64",
-      "dependencies": []
+      "dependencies": [
+        {
+          "id": "whisper",
+          "filename": "libggml.so",
+          "description": "ggml library for ARM64 architecture.",
+          "path": "linux/libggml.so",
+          "architecture": "arm64",
+          "url": "https://github.com/rn0x/Audio2TextJS/releases/download/BIN_FILES/libggml.so"
+        },
+        {
+          "id": "whisper",
+          "filename": "libwhisper.so",
+          "description": "Whisper library for ARM64 architecture.",
+          "path": "linux/libwhisper.so",
+          "architecture": "arm64",
+          "url": "https://github.com/rn0x/Audio2TextJS/releases/download/BIN_FILES/libwhisper.so"
+        },
+        {
+          "id": "whisper",
+          "filename": "libwhisper.so.1",
+          "description": "Whisper library version 1 for ARM64 architecture.",
+          "path": "linux/libwhisper.so.1",
+          "architecture": "arm64",
+          "url": "https://github.com/rn0x/Audio2TextJS/releases/download/BIN_FILES/libwhisper.so.1"
+        },
+        {
+          "id": "whisper",
+          "filename": "libwhisper.so.1.6.2",
+          "description": "Whisper library version 1.6.2 for ARM64 architecture.",
+          "path": "linux/libwhisper.so.1.6.2",
+          "architecture": "arm64",
+          "url": "https://github.com/rn0x/Audio2TextJS/releases/download/BIN_FILES/libwhisper.so.1.6.2"
+        }
+      ]
     }
   ],
   "win32": [
@@ -83,7 +149,7 @@
       "url": "https://github.com/rn0x/Audio2TextJS/releases/download/BIN_FILES/whisper.exe",
       "dependencies": [
         {
-          "id":"whisper",
+          "id": "whisper",
           "filename": "whisper.dll",
           "description": "Whisper dynamic link library for audio processing.",
           "path": "win32/whisper.dll",
@@ -91,7 +157,7 @@
           "url": "https://github.com/rn0x/Audio2TextJS/releases/download/BIN_FILES/whisper.dll"
         },
         {
-          "id":"whisper",
+          "id": "whisper",
           "filename": "SDL2.dll",
           "description": "Simple DirectMedia Layer (SDL) library for handling multimedia, input, and windowing.",
           "path": "win32/SDL2.dll",
@@ -99,7 +165,7 @@
           "url": "https://github.com/rn0x/Audio2TextJS/releases/download/BIN_FILES/SDL2.dll"
         },
         {
-          "id":"whisper",
+          "id": "whisper",
           "filename": "quantize.exe",
           "description": "Quantization tool for optimizing neural networks.",
           "path": "win32/quantize.exe",
@@ -107,7 +173,7 @@
           "url": "https://github.com/rn0x/Audio2TextJS/releases/download/BIN_FILES/quantize.exe"
         },
         {
-          "id":"whisper",
+          "id": "whisper",
           "filename": "bench.exe",
           "description": "Benchmarking tool for performance testing.",
           "path": "win32/bench.exe",

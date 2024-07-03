@@ -12,7 +12,53 @@ import { fileURLToPath } from 'node:url';
 import fetch from 'node-fetch';
 
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename); 
+const __dirname = path.dirname(__filename);
+
+/**
+ * Function to set LD_LIBRARY_PATH environment variable globally.
+ * @param {string} pathToAdd - The path to add to LD_LIBRARY_PATH.
+ */
+function setLDLibraryPath(pathToAdd) {
+    try {
+        const currentPath = process.env.LD_LIBRARY_PATH || '';
+        const newPath = `${pathToAdd}:${currentPath}`;
+
+        // Check if LD_LIBRARY_PATH is already set in ~/.bashrc
+        const bashrcPath = path.join(process.env.HOME, '.bashrc');
+        let bashrcContent = '';
+
+        if (fs.existsSync(bashrcPath)) {
+            bashrcContent = fs.readFileSync(bashrcPath, 'utf8');
+        }
+
+        const ldLibraryPathPattern = /export\s+LD_LIBRARY_PATH="([^"]*)"/;
+        const match = bashrcContent.match(ldLibraryPathPattern);
+
+        if (match) {
+            const existingPath = match[1];
+            if (existingPath.includes(pathToAdd)) {
+                console.log('LD_LIBRARY_PATH is already set to the correct path in ~/.bashrc');
+            } else {
+                // Replace the existing LD_LIBRARY_PATH with the new one
+                const updatedContent = bashrcContent.replace(ldLibraryPathPattern, `export LD_LIBRARY_PATH="${newPath}"`);
+                fs.writeFileSync(bashrcPath, updatedContent, 'utf8');
+                execSync('source ~/.bashrc');
+                console.log(`LD_LIBRARY_PATH updated to: ${newPath}`);
+            }
+        } else {
+            // Set LD_LIBRARY_PATH globally using ~/.bashrc
+            const command = `echo 'export LD_LIBRARY_PATH="${newPath}"' >> ~/.bashrc && source ~/.bashrc`;
+            execSync(command);
+            console.log(`LD_LIBRARY_PATH set to: ${newPath}`);
+        }
+    } catch (err) {
+        console.error(`Error setting LD_LIBRARY_PATH in ~/.bashrc: ${err.message}`);
+        const ldLibraryPath = process.env.LD_LIBRARY_PATH || '';
+        const newPath = `${pathToAdd}:${ldLibraryPath}`;
+        process.env.LD_LIBRARY_PATH = newPath;
+        console.log(`LD_LIBRARY_PATH set to: ${newPath} (temporarily in current process due to error)`);
+    }
+}
 
 /**
  * Function to download a file from a URL and save it to a specified path.
@@ -173,6 +219,10 @@ export default async function fetchBinFiles(os, arch, programs, destDir) {
         // Update result.success based on file existence
         result.success = allFilesExist && result.files.failed.length === 0 && result.dependencies.failed.length === 0;
 
+        // Set LD_LIBRARY_PATH if OS is Linux
+        if (os === 'linux' || os === 'android') {
+            setLDLibraryPath(path.join(destDir, 'linux'));
+        }
         return result; // Return the result object after all downloads and dependencies are processed
     } catch (err) {
         console.error(`Error in fetchBinFiles: ${err.message}`);
