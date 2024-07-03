@@ -6,6 +6,7 @@
  * repository: https://github.com/rn0x/Audio2TextJS
  */
 
+import { execSync } from 'node:child_process';
 import fs from 'fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
