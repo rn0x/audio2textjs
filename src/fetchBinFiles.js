@@ -24,41 +24,67 @@ function setLDLibraryPath(pathToAdd) {
         const currentPath = process.env.LD_LIBRARY_PATH || '';
         const newPath = `${pathToAdd}:${currentPath}`;
 
-        // Check if LD_LIBRARY_PATH is already set in ~/.bashrc
-        const bashrcPath = path.join(process.env.HOME, '.bashrc');
-        let bashrcContent = '';
+        updateLDLibraryPathInBashrc(newPath);
+    } catch (err) {
+        handleLDLibraryPathError(pathToAdd, err);
+    }
+}
+
+/**
+ * Updates LD_LIBRARY_PATH in ~/.bashrc or ~/.bash_profile if found.
+ * @param {string} newPath - The new LD_LIBRARY_PATH value to set.
+ */
+function updateLDLibraryPathInBashrc(newPath) {
+    const bashFiles = ['.bashrc', '.bash_profile'];
+
+    for (const bashFile of bashFiles) {
+        const bashrcPath = path.join(process.env.HOME, bashFile);
 
         if (fs.existsSync(bashrcPath)) {
-            bashrcContent = fs.readFileSync(bashrcPath, 'utf8');
-        }
+            const bashrcContent = fs.readFileSync(bashrcPath, 'utf8');
+            const ldLibraryPathPattern = /export\s+LD_LIBRARY_PATH="([^"]*)"/;
+            const match = bashrcContent.match(ldLibraryPathPattern);
 
-        const ldLibraryPathPattern = /export\s+LD_LIBRARY_PATH="([^"]*)"/;
-        const match = bashrcContent.match(ldLibraryPathPattern);
-
-        if (match) {
-            const existingPath = match[1];
-            if (existingPath.includes(pathToAdd)) {
-                console.log('LD_LIBRARY_PATH is already set to the correct path in ~/.bashrc');
-            } else {
-                // Replace the existing LD_LIBRARY_PATH with the new one
-                const updatedContent = bashrcContent.replace(ldLibraryPathPattern, `export LD_LIBRARY_PATH="${newPath}"`);
-                fs.writeFileSync(bashrcPath, updatedContent, 'utf8');
-                execSync('source ~/.bashrc');
-                console.log(`LD_LIBRARY_PATH updated to: ${newPath}`);
+            if (match) {
+                const existingPath = match[1];
+                if (existingPath.includes(newPath)) {
+                    console.log(`LD_LIBRARY_PATH is already set to the correct path in ${bashFile}`);
+                } else {
+                    const updatedContent = bashrcContent.replace(ldLibraryPathPattern, `export LD_LIBRARY_PATH="${newPath}"`);
+                    fs.writeFileSync(bashrcPath, updatedContent, 'utf8');
+                    execSync(`source ${bashrcPath}`);
+                    console.log(`LD_LIBRARY_PATH updated in ${bashFile} to: ${newPath}`);
+                }
+                return;
             }
-        } else {
-            // Set LD_LIBRARY_PATH globally using ~/.bashrc
-            const command = `echo 'export LD_LIBRARY_PATH="${newPath}"' >> ~/.bashrc && source ~/.bashrc`;
-            execSync(command);
-            console.log(`LD_LIBRARY_PATH set to: ${newPath}`);
         }
-    } catch (err) {
-        console.error(`Error setting LD_LIBRARY_PATH in ~/.bashrc: ${err.message}`);
-        const ldLibraryPath = process.env.LD_LIBRARY_PATH || '';
-        const newPath = `${pathToAdd}:${ldLibraryPath}`;
-        process.env.LD_LIBRARY_PATH = newPath;
-        console.log(`LD_LIBRARY_PATH set to: ${newPath} (temporarily in current process due to error)`);
     }
+
+    appendLDLibraryPathToBashrc(newPath);
+}
+
+/**
+ * Appends LD_LIBRARY_PATH to ~/.bashrc or ~/.bash_profile if not found.
+ * @param {string} newPath - The new LD_LIBRARY_PATH value to set.
+ */
+function appendLDLibraryPathToBashrc(newPath) {
+    const bashFile = '.bashrc';
+    const command = `echo 'export LD_LIBRARY_PATH="${newPath}"' >> ${path.join(process.env.HOME, bashFile)} && source ${path.join(process.env.HOME, bashFile)}`;
+
+    execSync(command);
+    console.log(`LD_LIBRARY_PATH set in ${bashFile} to: ${newPath}`);
+}
+
+/**
+ * Handles errors setting LD_LIBRARY_PATH.
+ * @param {string} pathToAdd - The path attempted to be added to LD_LIBRARY_PATH.
+ */
+function handleLDLibraryPathError(pathToAdd, err) {
+    console.error(`Error setting LD_LIBRARY_PATH in ~/.bashrc: ${err.message}`);
+    const ldLibraryPath = process.env.LD_LIBRARY_PATH || '';
+    const newPath = `${pathToAdd}:${ldLibraryPath}`;
+    process.env.LD_LIBRARY_PATH = newPath;
+    console.log(`LD_LIBRARY_PATH set to: ${newPath} (temporarily in current process due to error)`);
 }
 
 /**
@@ -185,48 +211,39 @@ export default async function fetchBinFiles(os, arch, programs, destDir) {
 
         // Download only the dependencies that have not been downloaded or are not locally available
         for (const program of programs) {
-            const programFile = files.find(file => file.filename === `${program}.exe` || file.filename === program);
+            const programFile = files.find(file => file.id === program);
+        
             if (programFile && programFile.dependencies && programFile.dependencies.length > 0) {
                 console.log(`Downloading dependencies for ${program}...`);
-
                 for (const dependency of programFile.dependencies) {
                     const dependencyPath = path.join(destDir, dependency.path);
-
-                    if (fs.existsSync(dependencyPath)) {
+                    if (!fs.existsSync(dependencyPath)) {
+                        console.log(`Downloading dependency ${dependency.filename}...`);
+                        try {
+                            await downloadFile(dependency.url, dependencyPath);
+                            console.log(`Dependency ${dependency.filename} downloaded successfully.`);
+                            result.dependencies.success.push({ filename: dependency.filename, path: dependencyPath, status: 'downloaded' });
+                        } catch (err) {
+                            console.error(`Failed to download dependency ${dependency.filename}: ${err.message}`);
+                            result.dependencies.failed.push({ filename: dependency.filename, url: dependency.url, error: err.message });
+                            result.success = false; // Update result.success on dependency download failure
+                        }
+                    } else {
                         console.log(`Dependency ${dependency.filename} already exists at ${dependencyPath}, skipping download.`);
                         result.dependencies.success.push({ filename: dependency.filename, path: dependencyPath, status: 'exists' });
-                        continue; // Skip if dependency exists
-                    }
-
-                    try {
-                        await downloadFile(dependency.url, dependencyPath, 10); // Assuming maxRedirects is 10 by default
-                        console.log(`Downloaded dependency ${dependency.filename} to ${dependencyPath}`);
-                        result.dependencies.success.push({ filename: dependency.filename, path: dependencyPath, status: 'downloaded' });
-                    } catch (err) {
-                        console.error(`Failed to download dependency ${dependency.filename}: ${err.message}`);
-                        result.dependencies.failed.push({ filename: dependency.filename, url: dependency.url, error: err.message });
-                        result.success = false; // Update result.success on dependency download failure
                     }
                 }
             }
         }
 
-        // Check if all files were already downloaded
-        const allFilesExist = files.every(file => {
-            const fileFullPath = path.join(destDir, file.path);
-            return fs.existsSync(fileFullPath);
-        });
-
-        // Update result.success based on file existence
-        result.success = allFilesExist && result.files.failed.length === 0 && result.dependencies.failed.length === 0;
-
         // Set LD_LIBRARY_PATH if OS is Linux
         if (os === 'linux' || os === 'android') {
             setLDLibraryPath(path.join(destDir, 'linux'));
         }
-        return result; // Return the result object after all downloads and dependencies are processed
+
+        return result;
     } catch (err) {
-        console.error(`Error in fetchBinFiles: ${err.message}`);
-        return { success: false, error: err.message };
+        console.error(`Error fetching binary files: ${err.message}`);
+        throw err;
     }
 }

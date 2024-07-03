@@ -1,13 +1,15 @@
 {
   "name": "audio2textjs",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A Node.js library for audio processing and transcription using the Whisper tool. It supports converting audio files to text using various pre-trained models",
   "main": "src/Audio2TextJS.js",
   "type": "module",
   "scripts": {
-    "start": "node src/index.js",
     "postinstall": "node src/postinstall.js",
     "test": "node examples/test.js"
+  },
+  "bin": {
+    "audio2textjs": "examples/cli/index.js"
   },
   "keywords": [
     "audio",
@@ -49,6 +51,7 @@
   },
   "license": "MIT",
   "dependencies": {
+    "commander": "^12.1.0",
     "node-fetch": "^3.3.2"
   }
 }
