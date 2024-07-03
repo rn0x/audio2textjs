@@ -175,7 +175,12 @@ class Audio2TextJS {
         ].filter(Boolean);
 
         const whisperPath = this.getWhisperPath();
-        const subprocess = spawn(whisperPath, args);
+        const subprocess = spawn(whisperPath, args, {
+            env: {
+                ...process.env,
+                LD_LIBRARY_PATH: (this.platform === 'linux' || this.platform === 'android') ? path.join(this.__dirname, 'bin', 'linux') : ''
+            }
+        });
         const command = subprocess.spawnargs.join(" ");
 
         let stderr = '';

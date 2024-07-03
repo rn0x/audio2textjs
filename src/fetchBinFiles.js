@@ -52,7 +52,7 @@ function updateLDLibraryPathInBashrc(newPath) {
                 } else {
                     const updatedContent = bashrcContent.replace(ldLibraryPathPattern, `export LD_LIBRARY_PATH="${newPath}"`);
                     fs.writeFileSync(bashrcPath, updatedContent, 'utf8');
-                    execSync(`source ${bashrcPath}`);
+                    execSync(`. ${bashrcPath}`);
                     console.log(`LD_LIBRARY_PATH updated in ${bashFile} to: ${newPath}`);
                 }
                 return;
@@ -69,9 +69,10 @@ function updateLDLibraryPathInBashrc(newPath) {
  */
 function appendLDLibraryPathToBashrc(newPath) {
     const bashFile = '.bashrc';
-    const command = `echo 'export LD_LIBRARY_PATH="${newPath}"' >> ${path.join(process.env.HOME, bashFile)} && source ${path.join(process.env.HOME, bashFile)}`;
+    const command = `echo 'export LD_LIBRARY_PATH="${newPath}"' >> ${path.join(process.env.HOME, bashFile)} && . ${path.join(process.env.HOME, bashFile)}`;
 
     execSync(command);
+    sourceBashrc();
     console.log(`LD_LIBRARY_PATH set in ${bashFile} to: ${newPath}`);
 }
 
@@ -85,6 +86,19 @@ function handleLDLibraryPathError(pathToAdd, err) {
     const newPath = `${pathToAdd}:${ldLibraryPath}`;
     process.env.LD_LIBRARY_PATH = newPath;
     console.log(`LD_LIBRARY_PATH set to: ${newPath} (temporarily in current process due to error)`);
+}
+
+/**
+ * Sources the ~/.bashrc file.
+ * @throws {Error} If there is an error while sourcing ~/.bashrc.
+ */
+function sourceBashrc() {
+    try {
+        const bashrcPath = `${process.env.HOME}/.bashrc`;
+        execSync(`/bin/bash -i -c "source ${bashrcPath}"`);
+    } catch (error) {
+        throw new Error(`Error: ${error}`);
+    }
 }
 
 /**
@@ -212,7 +226,7 @@ export default async function fetchBinFiles(os, arch, programs, destDir) {
         // Download only the dependencies that have not been downloaded or are not locally available
         for (const program of programs) {
             const programFile = files.find(file => file.id === program);
-        
+
             if (programFile && programFile.dependencies && programFile.dependencies.length > 0) {
                 console.log(`Downloading dependencies for ${program}...`);
                 for (const dependency of programFile.dependencies) {
